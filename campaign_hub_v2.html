@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iain Anderson Account Campaign Hub</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F3F3F3; color: #181818; font-size: 14px; }
+
+.header { background: linear-gradient(135deg, #032D60, #0176D3); color: white; padding: 18px 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.header h1 { font-size: 20px; font-weight: 700; }
+.header .sub { font-size: 11px; opacity: 0.75; margin-top: 2px; }
+.hstats { display: flex; gap: 20px; flex-wrap: wrap; }
+.hstat { text-align: center; }
+.hstat .val { font-size: 20px; font-weight: 800; }
+.hstat .lbl { font-size: 10px; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* USER BAR */
+.user-bar { background: white; border-bottom: 1px solid #DDDBDA; padding: 6px 28px; display: flex; align-items: center; gap: 10px; font-size: 12px; }
+.user-bar select { padding: 4px 8px; border: 1px solid #DDDBDA; border-radius: 6px; font-size: 12px; }
+
+/* CAMPAIGN TABS */
+.camp-tabs { background: white; border-bottom: 2px solid #DDDBDA; padding: 0 28px; display: flex; overflow-x: auto; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,0.07); }
+.ctab { padding: 11px 16px; cursor: pointer; font-size: 12px; font-weight: 600; color: #514F4D; border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; user-select: none; }
+.ctab:hover { color: #0176D3; }
+.ctab.active { color: #0176D3; border-bottom-color: #0176D3; }
+
+/* CONTENT */
+.content { padding: 20px 28px; max-width: 1400px; margin: 0 auto; }
+.camp-section { display: none; }
+.camp-section.active { display: block; }
+
+/* CAMPAIGN HEADER */
+.camp-meta { background: white; border-radius: 8px; border: 1px solid #DDDBDA; padding: 14px 18px; margin-bottom: 16px; }
+.camp-meta .cm-name { font-size: 16px; font-weight: 800; color: #032D60; margin-bottom: 4px; }
+.camp-meta .cm-theme { font-size: 12px; color: #514F4D; margin-bottom: 8px; }
+.camp-meta .cm-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+.tag-red { background: #FDECEA; color: #C23934; }
+.tag-yellow { background: #FEF3E2; color: #DD7A01; }
+.tag-blue { background: #E8F4FD; color: #0176D3; }
+.tag-green { background: #EEF6EC; color: #2E844A; }
+.tag-gray { background: #F3F3F3; color: #514F4D; }
+.tag-purple { background: #F0EBFF; color: #6B4FBB; }
+
+/* ACCOUNT BLOCKS */
+.acct-block { background: white; border-radius: 8px; border: 1px solid #DDDBDA; margin-bottom: 14px; overflow: hidden; }
+.acct-head { padding: 12px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid #DDDBDA; }
+.acct-head.t1 { border-left: 4px solid #C23934; }
+.acct-head.t2 { border-left: 4px solid #DD7A01; }
+.acct-head.t3 { border-left: 4px solid #514F4D; }
+.acct-title { font-size: 14px; font-weight: 800; color: #032D60; }
+.acct-sub { font-size: 11px; color: #514F4D; margin-top: 1px; }
+.acct-action { font-size: 11px; background: #FEF3E2; border-left: 3px solid #DD7A01; border-radius: 0 6px 6px 0; padding: 5px 10px; color: #032D60; margin: 0 16px 10px; line-height: 1.5; }
+
+/* CONTACT TABLE */
+.contact-table { width: 100%; border-collapse: collapse; }
+.contact-table th { background: #F3F3F3; padding: 7px 14px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: #514F4D; border-bottom: 1px solid #DDDBDA; }
+.contact-table td { padding: 9px 14px; border-bottom: 1px solid #DDDBDA; vertical-align: middle; font-size: 12px; }
+.contact-table tr:last-child td { border-bottom: none; }
+.contact-table tr:hover td { background: #E8F4FD; }
+.cn { font-weight: 700; color: #032D60; }
+.ct { color: #514F4D; font-size: 11px; }
+.ce { color: #0176D3; font-size: 11px; }
+
+/* ACTIVITY CHIPS */
+.act-chips { display: flex; gap: 4px; flex-wrap: wrap; }
+.ach { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.ach-call { background: #EEF6EC; color: #2E844A; }
+.ach-connect { background: #d4edda; color: #155724; }
+.ach-email { background: #E8F4FD; color: #0176D3; }
+.ach-linkedin { background: #E8F0FE; color: #1A73E8; }
+.ach-warn { background: #FDECEA; color: #C23934; font-size: 9px; }
+
+/* LOG BUTTON */
+.log-btn { padding: 4px 12px; border: 1px solid #0176D3; border-radius: 6px; background: white; color: #0176D3; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.log-btn:hover { background: #0176D3; color: white; }
+
+/* NOTES ROW */
+.notes-row td { padding: 8px 14px 12px; background: #FAFAFA; }
+.notes-area { width: 100%; border: 1px solid #DDDBDA; border-radius: 6px; padding: 6px 10px; font-size: 12px; font-family: inherit; resize: vertical; min-height: 40px; background: white; }
+.notes-area:focus { outline: none; border-color: #0176D3; }
+
+/* MODAL */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 500; justify-content: center; align-items: center; }
+.overlay.open { display: flex; }
+.modal { background: white; border-radius: 10px; padding: 22px; max-width: 440px; width: 94%; box-shadow: 0 16px 48px rgba(0,0,0,0.18); }
+.modal h3 { font-size: 15px; font-weight: 800; color: #032D60; margin-bottom: 4px; }
+.modal .for-who { font-size: 12px; color: #514F4D; margin-bottom: 14px; }
+.field { margin-bottom: 10px; }
+.field label { font-size: 10px; font-weight: 700; color: #514F4D; display: block; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.4px; }
+.field select, .field input, .field textarea { width: 100%; padding: 7px 10px; border: 1px solid #DDDBDA; border-radius: 6px; font-size: 13px; font-family: inherit; }
+.field textarea { min-height: 60px; resize: vertical; }
+.modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+.btn { padding: 7px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 12px; font-weight: 700; }
+.btn-primary { background: #0176D3; color: white; }
+.btn-ghost { background: white; color: #514F4D; border: 1px solid #DDDBDA; }
+</style>
+</head>
+<body>
+
+<!-- USER BAR -->
+<div class="user-bar">
+  <strong>You are:</strong>
+  <select id="user-sel" onchange="setUser(this.value)">
+    <option value="Iain Anderson|ae">Iain Anderson (AE)</option>
+    <option value="BDR|bdr">BDR</option>
+    <option value="MuleSoft SE|se">MuleSoft SE</option>
+    <option value="Tableau SE|se">Tableau SE</option>
+    <option value="MC SE|se">Marketing Cloud SE</option>
+  </select>
+  <span style="font-size:11px;color:#514F4D" id="today-lbl"></span>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <h1>🎯 Iain Anderson Account Campaign Hub</h1>
+    <div class="sub">Nonprofit AE · FY27 · Shared with: BDR · MuleSoft SE · Tableau SE · MC SE</div>
+  </div>
+  <div class="hstats">
+    <div class="hstat"><div class="val" id="hs-ae">0</div><div class="lbl">AE Touches Today</div></div>
+    <div class="hstat"><div class="val" id="hs-bdr">0</div><div class="lbl">BDR Touches Today</div></div>
+    <div class="hstat"><div class="val" id="hs-total">0</div><div class="lbl">Total This Week</div></div>
+  </div>
+</div>
+
+<!-- CAMPAIGN TABS -->
+<div class="camp-tabs">
+  <div class="ctab active" style="font-weight:800" onclick="showCamp('all-touched',this)">📊 All Activity</div>
+  <div class="ctab" onclick="showCamp('blood-newlogo',this)">🩸 Blood New Logo</div>
+  <div class="ctab" onclick="showCamp('blood-renew',this)">🩸 Blood Renewals</div>
+  <div class="ctab" onclick="showCamp('foundation-health',this)">💙 Health Foundations</div>
+  <div class="ctab" onclick="showCamp('hls-cosell',this)">⚠️ HLS Co-Sell</div>
+  <div class="ctab" onclick="showCamp('senior-living',this)">🏥 Senior Living</div>
+  <div class="ctab" onclick="showCamp('foundations',this)">🏛 Foundations</div>
+  <div class="ctab" onclick="showCamp('df2u',this)">🏙️ DF2U</div>
+  <div class="ctab" onclick="showCamp('webinar',this)">🎙️ Blood Webinar</div>
+  <div class="ctab" onclick="showCamp('focus16',this)">🎯 Focus 16</div>
+</div>
+
+<!-- CONTENT -->
+<div class="content" id="content"></div>
+
+<!-- LOG TOUCH MODAL -->
+<div class="overlay" id="modal">
+  <div class="modal">
+    <h3>Log a Touch</h3>
+    <div class="for-who" id="modal-for"></div>
+    <input type="hidden" id="m-key">
+    <div class="field">
+      <label>Touch Type</label>
+      <select id="m-type">
+        <option value="call">📞 Call — Left Voicemail</option>
+        <option value="connect">📞✅ Call — Connected</option>
+        <option value="email">📧 Email Sent</option>
+        <option value="linkedin">🔗 LinkedIn</option>
+        <option value="meeting">📅 Meeting / Demo</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Done by</label>
+      <input type="text" id="m-rep" placeholder="Your name">
+    </div>
+    <div class="field">
+      <label>Outcome / Notes (optional)</label>
+      <textarea id="m-outcome" placeholder="What happened? Any response? Next step?"></textarea>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTouch()">Log Touch</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── CAMPAIGN + CONTACT DATA ─────────────────────────────────────────────────
+
+const CAMPAIGNS = {
+  'blood-newlogo': {
+    name: '🩸 Blood Bank New Logo', tier: 't1',
+    theme: 'Post-merger data unification + Agentforce donor automation',
+    window: 'Dec 2026', revenue: '$80K–$150K ACV',
+    products: ['Sales Cloud','Marketing Cloud','MuleSoft','Agentforce'],
+    accounts: [
+      { id:'carter', name:'Carter BloodCare', sfId:'0013000000ZjbOpAAJ', rev:'$112M', tier:'t1', closeBy:'Dec 2026',
+        nextAction:'📧 Email Barbara Bryant — post-merger DB unification. Offer OBI reference call.',
+        contacts:[
+          { id:'carter-barbara', name:'Barbara Bryant', title:'CEO', email:'bbryant@carterbloodcare.org', phone:'817-412-5000' },
+          { id:'carter-andrea', name:'Andrea Sign', title:'Director, Marketing, Comms & Donor Relations', email:'asign@carterbloodcare.org', phone:'817-706-2447' },
+          { id:'carter-nancy', name:'Nancy Perez', title:'CFO', email:'nperez@carterbloodcare.org' },
+          { id:'carter-veronica', name:'Veronica Moore', title:'VP Marketing & Operations Support', email:'vmoore@carterbloodcare.org' },
+          { id:'carter-gus', name:'Gus Cortes', title:'IS Applications Director', email:'gcortes@carterbloodcare.org' },
+        ]},
+      { id:'bloodconnect', name:'Blood Connection Inc.', sfId:'0013000001GX5A4AAL', rev:'$72M', tier:'t1', closeBy:'Dec 2026',
+        nextAction:'📧 Email Delisa English — MuleSoft re-open with VA/Sovah expansion hook',
+        contacts:[
+          { id:'bc-delisa', name:'Delisa English', title:'President & CEO', email:'denglish@thebloodconnection.org' },
+          { id:'bc-amber', name:'Amber Fuller', title:'Sr. Director, Technical Services (ABC Fellow)', email:'find via LinkedIn' },
+          { id:'bc-william', name:'William Mimbs', title:'VP, Operational Support & Technology', email:'wmimbs@thebloodconnection.org' },
+          { id:'bc-brian', name:'Brian Madden', title:'COO', email:'bmadden@thebloodconnection.org' },
+          { id:'bc-don', name:'Don Hall', title:'Contact', email:'dhall@thebloodconnection.org' },
+        ]},
+      { id:'miblood', name:'Michigan Blood', sfId:'0013000000NRy69AAD', rev:'$58M', tier:'t2', closeBy:'Jan 2027',
+        nextAction:'🔍 Research CMO/VP Donor Services via LinkedIn — then Day 1 blood bank peer email',
+        contacts:[
+          { id:'mib-jim', name:'Jim Childress', title:'VP Communications', email:'jchildress@miblood.org' },
+          { id:'mib-carleen', name:'Carleen Crawford', title:'Director, Community Relations & Marketing', email:'ccrawford@miblood.org' },
+        ]},
+      { id:'kyblood', name:'Kentucky Blood Center', sfId:'0013000001CC6ywAAD', rev:'$31M', tier:'t2', closeBy:'Jan 2027',
+        nextAction:'🔍 NPC opp died Oct 2025 — re-open with Agentforce angle',
+        contacts:[
+          { id:'ky-martha', name:'Martha Osborne', title:'VP Marketing', email:'mosborne@kybloodcenter.org', phone:'859-519-3756' },
+          { id:'ky-eric', name:'Eric Lindsey', title:'Director, Media & Branding', email:'elindsey@kybloodcenter.org' },
+        ]},
+      { id:'cbcinc', name:'Community Blood Center Inc.', sfId:'0013000000ZjbIsAAJ', rev:'$15.8M', tier:'t2', closeBy:'Jan 2027',
+        nextAction:'📧 Email Tricia Voskuil — DF2U Chicago Oct 13 + MC/Agentforce pitch',
+        contacts:[
+          { id:'cbc-tricia', name:'Tricia Voskuil', title:'VP Marketing & PR', email:'tvoskuil@communityblood.org', phone:'715-358-7015' },
+          { id:'cbc-lamekia', name:'Lamekia Davis', title:'Executive Director, Chicago Operations', email:'lamekia.davis@communityblood.org' },
+        ]},
+    ]},
+
+  'blood-renew': {
+    name: '🩸 Blood Bank Renewals (Must Close)', tier: 't1',
+    theme: 'Protect and expand existing customer base — hard deadlines',
+    window: 'Nov–Dec 2026', revenue: '$35K existing ACV + expansion',
+    products: ['Sales Cloud','Agentforce','Tableau'],
+    accounts: [
+      { id:'obi', name:'Oklahoma Blood Institute', sfId:'0013000000ZjcRzAAJ', rev:'$108M', tier:'t1', closeBy:'Nov 21, 2026',
+        nextAction:'📞 CALL Charles Mooney — close Stage 05 uplift before Nov 21. ⚠️ Oct 8: Charles replied "not looking to expand our current use of Salesforce tools."',
+        contacts:[
+          { id:'obi-charles', name:'Charles Mooney', title:'Contact', email:'charles.mooney@obi.org', phone:'405-278-3100', warn:'Oct 8: Replied — "We are not looking to expand our current use of Salesforce tools."' },
+          { id:'obi-quintrel', name:'Quintrel Burris', title:'Contact', email:'qburris@obi.org' },
+          { id:'obi-tara', name:'Tara Scott', title:'VP Marketing & Communications', email:'tara.scott@obi.org', phone:'405-278-3100' },
+        ]},
+      { id:'barr', name:'BARR Center', sfId:'0010M00001S9FFYQA3', rev:'$75.8M', tier:'t1', closeBy:'Dec 10, 2026',
+        nextAction:'📧 EBR request ahead of Dec 10 renewal. Frame NPC + Agentforce expansion for 1,447-person org on 9 SFA.',
+        contacts:[
+          { id:'barr-robert', name:'Robert Brough', title:'Ambassador (warm intro)', email:'robert.brough@barrcenter.org', phone:'763-656-3062' },
+          { id:'barr-angela', name:'Angela Jerabek', title:'Founder & Executive Director', email:'via barrcenter.org' },
+          { id:'barr-jennifer', name:'Jennifer Remick', title:'COO', email:'via barrcenter.org' },
+        ]},
+      { id:'bbak', name:'Blood Bank of Alaska', sfId:'0013y00001craJEAAY', rev:'$11.5M', tier:'t2', closeBy:'Dec 2026',
+        nextAction:'📧 Agentforce add-on conversation via ISV/Sage Intacct channel',
+        contacts:[
+          { id:'ak-ashere', name:'Ashere Chait', title:'Director, Marketing & Comms', email:'achait@bbak.org', phone:'907-222-5601' },
+          { id:'ak-robert', name:'Robert Scanlon', title:'CEO', email:'robert@bloodbankofalaska.org' },
+        ]},
+    ]},
+
+  'foundation-health': {
+    name: '💙 Health Foundations (CEO Window Open)', tier: 't1',
+    theme: 'Capital campaign management + grateful patient programs',
+    window: 'Nov 2026–Jan 2027', revenue: '$80K–$200K NPC ACV',
+    products: ['Nonprofit Cloud','Marketing Cloud','Agentforce','Data Cloud'],
+    accounts: [
+      { id:'tchhf', name:"Texas Children's Hospital Foundation", sfId:'001ed00000bjaJqAAI', rev:'$65M fdn', tier:'t1', closeBy:'Dec 2026',
+        nextAction:"📧 Email VP Development — Salute to Champions follow-up + NPC for Kinder $160M capital campaign",
+        contacts:[
+          { id:'tch-debra', name:'Debra Sukin', title:'CEO', email:'via texaschildrens.org' },
+          { id:'tch-vpdev', name:'VP Development', title:'Find via LinkedIn', email:'via texaschildrens.org' },
+        ]},
+      { id:'mhf', name:'Memorial Hermann Foundation', sfId:'0010M00001WkTsiQAF', rev:'$24.6M fdn', tier:'t1', closeBy:'Dec 2026',
+        nextAction:'📧 Razzle Dazzle gala follow-up + intro to incoming CEO Alec King + NPC pitch',
+        contacts:[
+          { id:'mh-steven', name:'Steven Lin', title:'AVP, Digital Marketing & Consumer Engagement', email:'steven.lin@memorialhermann.org' },
+          { id:'mh-alec', name:'Alec H. King', title:'Incoming CEO', email:'via memorialhermann.org' },
+        ]},
+      { id:'nemours', name:'The Nemours Foundation', sfId:'0010M00001U1kUZQAZ', rev:'$1.3B · $64K base', tier:'t1', closeBy:'Jan 2027',
+        nextAction:'📞 Call Nadav Harper to align strategy → book exec meeting with Jessica Koubek + Kevin Carraccio',
+        contacts:[
+          { id:'nem-jessica', name:'Jessica Koubek', title:'Contract/Renewal Manager', email:'jessica.koubek@nemours.org' },
+          { id:'nem-kevin', name:'Kevin Carraccio', title:'SVP, Enterprise Philanthropy & Principal Gift Officer', email:'via nemours.org' },
+          { id:'nem-nadav', name:'Nadav Harper', title:'BDR (internal — coordinate)', email:'via Salesforce' },
+        ]},
+      { id:'christhospital', name:'The Christ Hospital Foundation', sfId:'', rev:'$109K opp active', tier:'t1', closeBy:'Dec 2026',
+        nextAction:'⚠️ Message Atul Sharma (HLS AE) in #ZC:C0BESTPPGAU TODAY — co-sell the NPC opp HLS opened without you',
+        contacts:[
+          { id:'ch-gabriel', name:'Gabriel Trieger', title:'Foundation Contact', email:'gabriel.trieger@thechristhospital.com' },
+          { id:'ch-atul', name:'Atul Sharma', title:'HLS AE (internal — co-sell)', email:'via Slack' },
+        ]},
+    ]},
+
+  'hls-cosell': {
+    name: '⚠️ HLS Co-Sell (Foundation Lane Only)', tier: 't1',
+    theme: 'Community programs, grant management — NOT clinical workflows',
+    window: 'Nov 2026–Jan 2027', revenue: 'NPC/community opp — HLS owns clinical',
+    products: ['Nonprofit Cloud','Marketing Cloud','Agentforce'],
+    accounts: [
+      { id:'caresource', name:'CareSource Management Group', sfId:'0013000000JjYwuAAF', rev:'$8.8B', tier:'t1', closeBy:'Dec 2026',
+        nextAction:'⚠️ Slack HLS AE first → email Stephanie Williams (new CFO, day 4 in seat) — Foundation programs angle',
+        contacts:[
+          { id:'cs-stephanie', name:'Stephanie Williams', title:'CFO (new — day 4 in seat)', email:'via caresource.com' },
+          { id:'cs-mark', name:'Mark Heitkamp', title:'VP Corporate Service', email:'mark.heitkamp@caresource.com' },
+          { id:'cs-jenny', name:'Jenny Michael', title:'SVP Marketing & CEO CareSource Foundation', email:'jenny.michael@caresource.com' },
+        ]},
+      { id:'ghc', name:'Group Health Co-op SCW', sfId:'0010M00001SIfsHQAT', rev:'$518M', tier:'t1', closeBy:'Dec 2026',
+        nextAction:'⚠️ Slack HLS AE → call Jordan Chirinos to understand why $300K HC opp died → email Annette Fox (CIO)',
+        contacts:[
+          { id:'ghc-annette', name:'Annette Fox', title:'CIO', email:'via ghcscw.com' },
+        ]},
+      { id:'trihealth', name:'TriHealth Physician Enterprises', sfId:'0013000001CC7K4AAL', rev:'$384M', tier:'t2', closeBy:'Jan 2027',
+        nextAction:'⚠️ Slack HLS AE → congrats email to new CEO on $240M Good Samaritan expansion',
+        contacts:[
+          { id:'tri-ceo', name:'Jennifer Woeffekl', title:'CEO (new Jul 2026)', email:'jwoeffekl@trihealth.com' },
+          { id:'tri-kelly', name:'Kelly Grier', title:'Director, Information Technology', email:'kelly_grier@trihealth.com' },
+        ]},
+    ]},
+
+  'senior-living': {
+    name: '🏥 Senior Living NPC', tier: 't2',
+    theme: 'Data privacy urgency + AI care coordination + resident engagement',
+    window: 'Jan–Feb 2027', revenue: '$80K–$150K NPC ACV',
+    products: ['Nonprofit Cloud','Service Cloud','Agentforce','Marketing Cloud'],
+    accounts: [
+      { id:'ohioliving', name:'Ohio Living', sfId:'0010M00001QqdXkQAJ', rev:'$205M', tier:'t2', closeBy:'Jan 2027',
+        nextAction:'📧 Email Gumina — 2 data incidents Mar-Apr 2026 as opener → NPC + Shield conversation',
+        contacts:[
+          { id:'ol-mica', name:'Mica Rees', title:'Chief Brand & Growth Officer', email:'mrees@ohioliving.org', phone:'614-888-7800' },
+          { id:'ol-laurence', name:'Laurence Gumina', title:'President & CEO', email:'lgumina@ohioliving.org' },
+          { id:'ol-dan', name:'Dan Ginis', title:'Chief Development Officer', email:'dginis@ohioliving.org' },
+        ]},
+      { id:'lifespace', name:'Lifespace Communities', sfId:'001ed00000l4IswAAE', rev:'$236M', tier:'t2', closeBy:'Jan 2027',
+        nextAction:'📧 50th anniversary modernization angle + new AE intro',
+        contacts:[
+          { id:'ls-cto', name:'CTO / VP Operations', title:'Find via LinkedIn', email:'lifespacecommunitiesinc.com' },
+        ]},
+      { id:'hfb', name:'The Houston Food Bank', sfId:'0013000000ZjbPkAAJ', rev:'$340M · $27.5K renewal', tier:'t2', closeBy:'Feb 12, 2027',
+        nextAction:'📧 Coordinate with Daniela Barroso on Feb renewal → propose EBR to reopen Agentforce expansion',
+        contacts:[
+          { id:'hfb-julie', name:'Julie Voss', title:'Chief Development Officer', email:'jvoss@houstonfoodbank.org', phone:'713-223-3700' },
+          { id:'hfb-martin', name:'Martin Bayang', title:'Sr. Director of Information Technology', email:'mbayang@houstonfoodbank.org' },
+          { id:'hfb-daniela', name:'Daniela Barroso', title:'Renewals Owner (Salesforce internal)', email:'via Salesforce' },
+        ]},
+      { id:'cleveland', name:'Cleveland Orchestra', sfId:'0013000000ZkIxOAAV', rev:'$64.8M', tier:'t2', closeBy:'Jan 2027',
+        nextAction:'📧 Email Maribeth Stahl — post-strike patron retention + NPC/MC pitch',
+        contacts:[
+          { id:'clo-maribeth', name:'Maribeth Stahl', title:'Chief Development Officer', email:'mstahl@clevelandorchestra.com', phone:'216-231-8011' },
+          { id:'clo-andre', name:'André Gremillet', title:'President & CEO', email:'andre.gremillet@clevelandorchestra.com' },
+          { id:'clo-carlo', name:'Carlo Claridad', title:'Manager, Database Marketing', email:'cclaridad@clevelandorchestra.com' },
+        ]},
+      { id:'pma', name:'Pacific Maritime Association', sfId:'0010M00001YavjyQAB', rev:'$185M', tier:'t2', closeBy:'Jan 2027',
+        nextAction:'📧 Follow up with Scott Rettig + Steven Hennessey — ILWU 2028 contract cycle + Salesforce capabilities. Jose Martinez connected Oct 8 — said "we do not work a Salesforce at this time."',
+        contacts:[
+          { id:'pma-jose', name:'Jose Martinez', title:'Contact', email:'jmartinez@pmanet.org', warn:'Oct 8: Called and connected. Said "we do not work a Salesforce at this time."' },
+          { id:'pma-scott', name:'Scott Rettig', title:'Contact', email:'srettig@pmanet.org' },
+          { id:'pma-steven', name:'Steven Hennessey', title:'Contact', email:'shennessey@pmanet.org' },
+          { id:'pma-chad', name:'Chad Lindsay', title:'Contact', email:'clindsay@pmanet.org' },
+        ]},
+    ]},
+
+  'foundations': {
+    name: '🏛 Independent Foundations', tier: 't2',
+    theme: 'Grant lifecycle management + program impact tracking',
+    window: 'Jan–Feb 2027', revenue: '$40K–$80K NPC ACV',
+    products: ['Nonprofit Cloud','Marketing Cloud','Agentforce'],
+    accounts: [
+      { id:'mott', name:'Charles Stuart Mott Foundation', sfId:'', rev:'$3B+ assets', tier:'t2', closeBy:'Feb 2027',
+        nextAction:'🔍 BDR: research President/CEO + VP Programs + CTO → Day 1 email: centennial + $37M Flint grant',
+        contacts:[
+          { id:'mott-ceo', name:'CEO / President', title:'Find via LinkedIn — mott.org', email:'mott.org' },
+          { id:'mott-vprog', name:'VP Programs', title:'Find via LinkedIn', email:'mott.org' },
+        ]},
+      { id:'presbyterian', name:'Presbyterian Medical Services', sfId:'', rev:'T2 focus', tier:'t2', closeBy:'Feb 2027',
+        nextAction:'🔍 Research contacts — NM safety-net healthcare org',
+        contacts:[
+          { id:'pms-ceo', name:'CEO / CTO', title:'Find via LinkedIn — pmsnet.org', email:'pmsnet.org' },
+        ]},
+    ]},
+
+  'df2u': {
+    name: '🏙️ Dreamforce 2 You — City Campaign', tier: 't1',
+    theme: 'Target: Directors, Managers, Champions — NOT C-suite for the event itself',
+    window: 'Sep–Nov 2026', revenue: 'Pipeline seeding — 10 cities',
+    products: ['All products'],
+    accounts: [
+      { id:'df2u-cbc', name:'Community Blood Center Inc. → Chicago (Oct 13)', sfId:'0013000000ZjbIsAAJ', rev:'40 spots left', tier:'t1', closeBy:'Oct 13, 2026',
+        nextAction:'📧 INVITE: Lamekia Davis, Tricia Voskuil, Peter Koel · AE PARALLEL: CEO John Hagins exec meeting same trip',
+        contacts:[
+          { id:'df-tricia', name:'Tricia Voskuil', title:'VP Marketing & PR — INVITE', email:'tvoskuil@communityblood.org' },
+          { id:'df-lamekia', name:'Lamekia Davis', title:'Exec Dir Chicago Ops — INVITE', email:'lamekia.davis@communityblood.org' },
+          { id:'df-hagins', name:'John Hagins', title:'CEO — AE PARALLEL MEETING', email:'jhagins@communityblood.org' },
+        ]},
+      { id:'df2u-cbco', name:'CBCO Ozarks → Chicago (Oct 13)', sfId:'0013000001CC97AAAT', rev:'40 spots left', tier:'t1', closeBy:'Oct 13, 2026',
+        nextAction:'📧 Kenda Burnham already emailed Oct 8 — DF2U Chicago + webinar invite sent',
+        contacts:[
+          { id:'df-kenda', name:'Kenda Burnham', title:'Sr. Dir Donor Recruitment & Mktg — INVITE', email:'burnhamk@cbco.org', phone:'417-227-5000' },
+          { id:'df-jason', name:'Jason Prahl', title:'Director, IT — INVITE', email:'prahlj@cbco.org' },
+          { id:'df-aroberts', name:'Anthony Roberts', title:'Executive Director — AE PARALLEL', email:'robertsa@cbco.org' },
+        ]},
+      { id:'df2u-bc', name:'Blood Connection → Atlanta (Oct 15)', sfId:'0013000001GX5A4AAL', rev:'15 spots left', tier:'t1', closeBy:'Oct 15, 2026',
+        nextAction:'📧 Emails sent Oct 7 to Brian Madden + Don Hall. LinkedIn InMail to William Mimbs. Follow up this week.',
+        contacts:[
+          { id:'df-wmimbs', name:'William Mimbs', title:'VP Ops & Tech — INVITE (LinkedIn InMailed Oct 7)', email:'wmimbs@thebloodconnection.org' },
+          { id:'df-bfuller', name:'Amber Fuller', title:'Sr. Dir Tech Services — INVITE (find email)', email:'find via LinkedIn' },
+          { id:'df-bmadden', name:'Brian Madden', title:'COO — AE PARALLEL (emailed Oct 7)', email:'bmadden@thebloodconnection.org' },
+        ]},
+      { id:'df2u-bbak', name:'Blood Bank of Alaska → Seattle (Oct 29)', sfId:'0013y00001craJEAAY', rev:'25 spots left', tier:'t1', closeBy:'Oct 29, 2026',
+        nextAction:'📧 Email Westley Dahlgren + Ashere Chait this week — 25 seats available, no urgency pressure',
+        contacts:[
+          { id:'df-wdahl', name:'Westley Dahlgren', title:'Director, Collections & Recruitment — INVITE', email:'wdahlgren@bbak.org' },
+          { id:'df-achait', name:'Ashere Chait', title:'Director Marketing & Comms — INVITE', email:'achait@bbak.org' },
+          { id:'df-rscanlon', name:'Robert Scanlon', title:'CEO — AE PARALLEL', email:'robert@bloodbankofalaska.org' },
+        ]},
+      { id:'df2u-carter', name:'Carter BloodCare → Austin (Nov 5)', sfId:'0013000000ZjbOpAAJ', rev:'50 spots left', tier:'t1', closeBy:'Nov 5, 2026',
+        nextAction:'📧 Andrea Sign already emailed Oct 8 for DF2U Austin. Email Gus Cortes + Deborah Chapman this week.',
+        contacts:[
+          { id:'df-acortes', name:'Gus Cortes', title:'IS Applications Director — INVITE', email:'gcortes@carterbloodcare.org' },
+          { id:'df-dchap', name:'Deborah Chapman', title:'Director Donor Comms — INVITE', email:'dchapman@carterbloodcare.org' },
+          { id:'df-asign2', name:'Andrea Sign', title:'Director Mktg & Donor Relations — INVITE (emailed Oct 8)', email:'asign@carterbloodcare.org' },
+          { id:'df-bgrigsby', name:'Bobby Grigsby', title:'COO — AE PARALLEL', email:'bgrigsby@carterbloodcare.org' },
+        ]},
+      { id:'df2u-weareblood', name:'We Are Blood → Austin (Nov 5)', sfId:'0013000000ZjbjzAAB', rev:'50 spots left', tier:'t1', closeBy:'Nov 5, 2026',
+        nextAction:'📧 Craig Lill + Nick Canedo already emailed + called Oct 8 for DF2U Austin. Follow up this week.',
+        contacts:[
+          { id:'df-ncanedo', name:'Nick Canedo', title:'VP Community Engagement — INVITE (emailed+called Oct 8)', email:'ncanedo@weareblood.org' },
+          { id:'df-clill', name:'Craig Lill', title:'Contact — INVITE (emailed+called Oct 8)', email:'clill@weareblood.org' },
+        ]},
+      { id:'df2u-ohio', name:'Ohio Living → Indianapolis (Nov 12)', sfId:'0010M00001QqdXkQAJ', rev:'30 spots left', tier:'t1', closeBy:'Nov 12, 2026',
+        nextAction:'📧 Email Matt Cheuvront (IT Dir), Dan Ginis (CDO), Joyce Miller Evans (CIO) this week — 30 seats available',
+        contacts:[
+          { id:'df-mcheuvront', name:'Matt Cheuvront', title:'Director, IT — INVITE', email:'mcheuvront@oprs.org' },
+          { id:'df-dginis', name:'Dan Ginis', title:'CDO — INVITE', email:'dginis@ohioliving.org' },
+          { id:'df-jmevans', name:'Joyce Miller Evans', title:'CIO — INVITE', email:'jmillerevans@oprs.org' },
+          { id:'df-lgumina', name:'Laurence Gumina', title:'CEO — AE PARALLEL', email:'lgumina@ohioliving.org' },
+        ]},
+    ]},
+
+  'webinar': {
+    name: '🎙️ Blood Center Webinar Outreach', tier: 't1',
+    theme: 'Solving the Donor Problem: Unified Marketing & The Donor 360 — Oct 14 at 1pm EDT',
+    window: 'Oct 14, 2026', revenue: 'Pipeline seeding across blood bank vertical',
+    products: ['Marketing Cloud','Agentforce','Nonprofit Cloud'],
+    accounts: [
+      { id:'wb-obi', name:'Oklahoma Blood Institute (Our Blood Institute)', sfId:'001ed000000ymRZAAY', rev:'$108M', tier:'t1', closeBy:'Oct 14',
+        nextAction:'📧 Tara Scott already emailed Oct 7. ⚠️ Charles Mooney replied negatively Oct 8 — do not re-approach Mooney for webinar.',
+        contacts:[
+          { id:'wb-tara', name:'Tara Scott', title:'VP Marketing & Comms (emailed Oct 7)', email:'tara.scott@obi.org', phone:'405-278-3100' },
+          { id:'wb-josh', name:'Joshua Gwin', title:'Marketing Strategist — fallback if Tara cold', email:'joshua.gwin@obi.org' },
+        ]},
+      { id:'wb-sdbb', name:'San Diego Blood Bank', sfId:'', rev:'$37M', tier:'t2', closeBy:'Oct 14',
+        nextAction:'📧 Javier Castillo emailed Oct 7. Doug Morton (CEO) emailed Oct 7 — Vitalant merger angle. Follow up.',
+        contacts:[
+          { id:'wb-jcastillo', name:'Javier Castillo', title:'VP Marketing (emailed Oct 7)', email:'jcastillo@sandiegobloodbank.org', phone:'619-400-8251' },
+          { id:'wb-dmorton', name:'Doug Morton', title:'CEO (emailed Oct 7 — Vitalant merger)', email:'dmorton@sandiegobloodbank.org' },
+          { id:'wb-leagan', name:'Leslie Eagan', title:'VP Donor Services', email:'leagan@sandiegobloodbank.org', phone:'619-400-8283' },
+        ]},
+      { id:'wb-ky', name:'Kentucky Blood Center', sfId:'0013000001CC6ywAAD', rev:'$31M', tier:'t2', closeBy:'Oct 14',
+        nextAction:'📧 Eric Lindsey emailed + called + LinkedIn Oct 7. Martha Osborne not yet contacted — reach out.',
+        contacts:[
+          { id:'wb-osborne', name:'Martha Osborne', title:'VP Marketing (not yet contacted)', email:'mosborne@kybloodcenter.org', phone:'859-519-3756' },
+          { id:'wb-elindsey', name:'Eric Lindsey', title:'Dir Media & Branding (emailed+called+LI Oct 7)', email:'elindsey@kybloodcenter.org' },
+        ]},
+      { id:'wb-lifeserve', name:'LifeServe Blood Center', sfId:'0013000001CC7suAAD', rev:'Des Moines IA', tier:'t2', closeBy:'Oct 14',
+        nextAction:'📧 Tim Paluch emailed Oct 7. Hot contact (Sep 2026 last activity). Follow up.',
+        contacts:[
+          { id:'wb-tpaluch', name:'Tim Paluch', title:'Director, PR & Marketing (emailed Oct 7)', email:'tim.paluch@lifeservebloodcenter.org', phone:'515-577-2266' },
+        ]},
+      { id:'wb-cbco', name:'Community Blood Center of the Ozarks', sfId:'0013000001CC97AAAT', rev:'Springfield MO', tier:'t2', closeBy:'Oct 14',
+        nextAction:'📧 Kenda Burnham called + emailed Oct 8. DF2U Chicago + webinar. Follow up.',
+        contacts:[
+          { id:'wb-kburnham', name:'Kenda Burnham', title:'Sr. Dir Donor Recruitment & Mktg (called+emailed Oct 8)', email:'burnhamk@cbco.org', phone:'417-227-5000' },
+        ]},
+      { id:'wb-weareblood', name:'We Are Blood', sfId:'0013000000ZjbjzAAB', rev:'Austin TX', tier:'t2', closeBy:'Oct 14',
+        nextAction:'📧 Nick Canedo + Craig Lill called + emailed Oct 8. Follow up on webinar registration.',
+        contacts:[
+          { id:'wb-ncanedo2', name:'Nick Canedo', title:'VP Community Engagement (called+emailed Oct 8)', email:'ncanedo@weareblood.org' },
+          { id:'wb-clill2', name:'Craig Lill', title:'Contact (called+emailed Oct 8)', email:'clill@weareblood.org' },
+          { id:'wb-sroulier', name:'Sean Roulier', title:'Donor Experience Manager (not yet contacted)', email:'sroulier@weareblood.org', phone:'512-206-1159' },
+        ]},
+    ]},
+
+  'focus16': {
+    name: '🎯 Focus 16 — Q4 Hyperfocus', tier: 't1',
+    theme: 'These 16 accounts have the highest probability of buying before Jan 31. Ranked by deal readiness.',
+    window: 'Jan 31, 2027', revenue: 'Q4 Rule: if it isn\'t on this list, it doesn\'t get calendar time.',
+    products: ['All products'],
+    accounts: [
+      { id:'f1', name:'#1 Carter BloodCare', sfId:'0013000000ZjbOpAAJ', rev:'$112M · New Logo · Post-merger', tier:'t1', closeBy:'Dec 2026', nextAction:'📧 Email Barbara Bryant — post-merger DB unification. Offer OBI reference call. Andrea Sign already emailed Oct 8.', contacts:[{id:'f1-barbara',name:'Barbara Bryant',title:'CEO',email:'bbryant@carterbloodcare.org',phone:'817-412-5000'},{id:'f1-andrea',name:'Andrea Sign',title:'Dir Marketing & Donor Relations',email:'asign@carterbloodcare.org'}]},
+      { id:'f2', name:'#2 The Nemours Foundation', sfId:'0010M00001U1kUZQAZ', rev:'$1.3B · $64K existing', tier:'t1', closeBy:'Jan 2027', nextAction:'📞 Call Nadav Harper to align → book Kevin Carraccio (SVP Philanthropy) for NPC + grateful patient pitch', contacts:[{id:'f2-jessica',name:'Jessica Koubek',title:'Contract/Renewal Manager',email:'jessica.koubek@nemours.org'},{id:'f2-kevin',name:'Kevin Carraccio',title:'SVP Enterprise Philanthropy',email:'via nemours.org'}]},
+      { id:'f3', name:'#3 Cleveland Orchestra', sfId:'0013000000ZkIxOAAV', rev:'$64.8M · post-strike', tier:'t2', closeBy:'Jan 2027', nextAction:'📧 Email Maribeth Stahl — post-strike patron retention. $200K NPC opp died Oct 2024 — timing is now better.', contacts:[{id:'f3-maribeth',name:'Maribeth Stahl',title:'Chief Development Officer',email:'mstahl@clevelandorchestra.com',phone:'216-231-8011'},{id:'f3-andre',name:'André Gremillet',title:'President & CEO',email:'andre.gremillet@clevelandorchestra.com'}]},
+      { id:'f4', name:'#4 Houston Food Bank', sfId:'0013000000ZjbPkAAJ', rev:'$340M · Feb renewal', tier:'t2', closeBy:'Feb 12, 2027', nextAction:'📧 Invite Martin Bayang to Agentforce Launchpad Oct 14 Houston (Perficient). Coordinate with Daniela Barroso on renewal.', contacts:[{id:'f4-julie',name:'Julie Voss',title:'CDO',email:'jvoss@houstonfoodbank.org'},{id:'f4-martin',name:'Martin Bayang',title:'Sr. Dir IT',email:'mbayang@houstonfoodbank.org',phone:'713-547-8609'}]},
+      { id:'f5', name:'#5 Ohio Living', sfId:'0010M00001QqdXkQAJ', rev:'$205M · 2 data incidents', tier:'t2', closeBy:'Jan 2027', nextAction:'📧 Email Mica Rees — congrats on Fortune Best Workplaces + new Cape May/Mt Pleasant villas. Data incident = Shield + NPC opener.', contacts:[{id:'f5-mica',name:'Mica Rees',title:'Chief Brand & Growth Officer',email:'mrees@ohioliving.org'},{id:'f5-laurence',name:'Laurence Gumina',title:'CEO',email:'via ohioliving.org'}]},
+      { id:'f6', name:'#6 BARR Center', sfId:'0010M00001S9FFYQA3', rev:'$75.8M · Dec 10 renewal', tier:'t1', closeBy:'Dec 10, 2026', nextAction:'📞 Call Robert Brough (Ambassador) — warm path to renewal conversation and NPC expansion pitch.', contacts:[{id:'f6-robert',name:'Robert Brough',title:'Ambassador',email:'robert.brough@barrcenter.org',phone:'763-656-3062'},{id:'f6-angela',name:'Angela Jerabek',title:'Founder & Executive Director',email:'via barrcenter.org'}]},
+      { id:'f7', name:'#7 Blood Connection Inc.', sfId:'0013000001GX5A4AAL', rev:'$72M · 4-state expansion', tier:'t1', closeBy:'Dec 2026', nextAction:'📧 Email Amber Fuller — ABC Executive Fellow angle. Re-open MuleSoft: "how\'s that cheaper ETL holding up across 4 states?"', contacts:[{id:'f7-amber',name:'Amber Fuller',title:'Sr. Dir Tech Services (ABC Fellow)',email:'find via LinkedIn'},{id:'f7-delisa',name:'Delisa English',title:'President & CEO',email:'denglish@thebloodconnection.org'}]},
+      { id:'f8', name:'#8 Christ Hospital Foundation', sfId:'', rev:'$109K opp active · budget season', tier:'t1', closeBy:'Dec 2026', nextAction:'⚠️ Message Atul Sharma TODAY in #ZC:C0BESTPPGAU — co-sell the NPC opp HLS opened without you. Gabriel Trieger is ready to move.', contacts:[{id:'f8-gabriel',name:'Gabriel Trieger',title:'Foundation Contact',email:'gabriel.trieger@thechristhospital.com'}]},
+      { id:'f9', name:'#9 Lifespace Communities', sfId:'001ed00000l4IswAAE', rev:'$236M · 50th anniversary', tier:'t2', closeBy:'Jan 2027', nextAction:'📧 New AE intro email — "I recently took over from Rick Boccard. Not picking up where that left off — want to start fresh."', contacts:[{id:'f9-cto',name:'CTO / VP Operations',title:'Find via LinkedIn',email:'lifespacecommunitiesinc.com'}]},
+      { id:'f10', name:'#10 Kentucky Blood Center', sfId:'0013000001CC6ywAAD', rev:'$31M · NPC dead Oct 2025', tier:'t2', closeBy:'Jan 2027', nextAction:'📧 Re-engage Martha Osborne — "NPC pricing has come down permanently + two new blood bank case studies (OBI, Carter)."', contacts:[{id:'f10-martha',name:'Martha Osborne',title:'VP Marketing',email:'mosborne@kybloodcenter.org',phone:'859-519-3756'}]},
+      { id:'f11', name:'#11 Blood Bank of Alaska', sfId:'0013y00001craJEAAY', rev:'$11.5M · active customer', tier:'t2', closeBy:'Dec 2026', nextAction:'📞 Call CEO — Sep 30 was recent activity. Reference new Agentforce pricing and DF2U Seattle Oct 29.', contacts:[{id:'f11-robert',name:'Robert Scanlon',title:'CEO',email:'robert@bloodbankofalaska.org'},{id:'f11-ashere',name:'Ashere Chait',title:'Dir Marketing & Comms',email:'achait@bbak.org'}]},
+      { id:'f12', name:'#12 Pacific Maritime Association', sfId:'0010M00001YavjyQAB', rev:'$185M · Sep 23 active', tier:'t2', closeBy:'Jan 2027', nextAction:'⚠️ Jose Martinez connected Oct 8 — said "we do not work a Salesforce at this time." Follow up with Scott Rettig + Steven Hennessey instead.', contacts:[{id:'f12-scott',name:'Scott Rettig',title:'Contact (emailed Oct 8)',email:'srettig@pmanet.org'},{id:'f12-steven',name:'Steven Hennessey',title:'Contact (emailed Oct 8)',email:'shennessey@pmanet.org'},{id:'f12-jose',name:'Jose Martinez',title:'Contact (connected Oct 8)',email:'jmartinez@pmanet.org',warn:'Oct 8 call connected: "we do not work a Salesforce at this time."'}]},
+      { id:'f13', name:'#13 Community Blood Center Inc.', sfId:'0013000000ZjbIsAAJ', rev:'$15.8M · Enterprise customer', tier:'t2', closeBy:'Jan 2027', nextAction:'📧 Tricia Voskuil called + emailed Oct 7 — DF2U Chicago + webinar. Follow up this week.', contacts:[{id:'f13-tricia',name:'Tricia Voskuil',title:'VP Marketing & PR (called+emailed Oct 7)',email:'tvoskuil@communityblood.org'}]},
+      { id:'f14', name:'#14 Presbyterian Medical Services', sfId:'', rev:'T2 NM safety-net', tier:'t2', closeBy:'Feb 2027', nextAction:'🔍 Research CEO/CTO via LinkedIn — NM safety-net health + human services org', contacts:[{id:'f14-ceo',name:'CEO / CTO',title:'Find via LinkedIn — pmsnet.org',email:'pmsnet.org'}]},
+      { id:'f15', name:'#15 Michigan Blood', sfId:'0013000000NRy69AAD', rev:'$58M · gone cold', tier:'t2', closeBy:'Jan 2027', nextAction:'📧 Marketing-led re-open to Carleen Crawford — "How are you managing donor recruitment campaigns right now?" Blood bank peer angle (OBI, Carter).', contacts:[{id:'f15-carleen',name:'Carleen Crawford',title:'Director, Community Relations & Marketing',email:'ccrawford@miblood.org'},{id:'f15-jim',name:'Jim Childress',title:'VP Communications',email:'jchildress@miblood.org'}]},
+      { id:'f16', name:"#16 Texas Children's Hospital Foundation", sfId:'001ed00000bjaJqAAI', rev:"$65M fdn / $160M Kinder campaign", tier:'t1', closeBy:'Dec 2026', nextAction:"📧 Email VP Development — Salute to Champions follow-up + NPC pitch for Kinder capital campaign management.", contacts:[{id:'f16-debra',name:'Debra Sukin',title:'CEO',email:'via texaschildrens.org'},{id:'f16-vpdev',name:'VP Development',title:'Find via LinkedIn',email:'via texaschildrens.org'}]},
+    ]},
+};
+
+// ─── STORAGE ─────────────────────────────────────────────────────────────────
+const LS = 'ch_v3';
+function getData() { try { return JSON.parse(localStorage.getItem(LS)) || {}; } catch(e) { return {}; } }
+function saveData(d) { localStorage.setItem(LS, JSON.stringify(d)); }
+
+// touch structure: data[contactId] = { log: [{type, rep, outcome, date}] }
+function getContactData(cid) {
+  const d = getData();
+  return d[cid] || { log: [] };
+}
+function saveContactData(cid, val) {
+  const d = getData();
+  d[cid] = val;
+  saveData(d);
+}
+
+// account notes: data['note_'+acctId]
+function getNote(aid) { return getData()['note_'+aid] || ''; }
+function saveNote(aid, val) { const d = getData(); d['note_'+aid] = val; saveData(d); }
+
+// ─── USER ─────────────────────────────────────────────────────────────────────
+let currentUser = localStorage.getItem('ch_user3') || 'Iain Anderson';
+let currentRole = localStorage.getItem('ch_role3') || 'ae';
+
+function setUser(val) {
+  const [name, role] = val.split('|');
+  currentUser = name; currentRole = role;
+  localStorage.setItem('ch_user3', name);
+  localStorage.setItem('ch_role3', role);
+  updateStats();
+}
+
+// ─── SEED OCT 7-8 TOUCHES ────────────────────────────────────────────────────
+function seedTouches() {
+  const d = getData();
+  if (d._seeded_v3) return;
+
+  const seed = {
+    // Carter BloodCare
+    'carter-veronica': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/7/2026 12:30 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'DF2U Austin + Donor 360 webinar invite', date:'10/7/2026 12:37 PM' },
+    ]},
+    'carter-nancy': { log:[
+      { type:'email', rep:'Iain Anderson', outcome:'Texoma merger congrats + integration cost angle', date:'10/7/2026 9:55 AM' },
+    ]},
+    'carter-andrea': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM — phone died mid attempt', date:'10/8/2026 1:55 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'DF2U Austin + Donor 360 webinar invite', date:'10/8/2026 1:59 PM' },
+    ]},
+    // OBI
+    'obi-tara': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/7/2026 10:15 AM' },
+      { type:'email', rep:'Iain Anderson', outcome:'Rethinking donor engagement — Donor 360 webinar invite', date:'10/7/2026 10:27 AM' },
+    ]},
+    'obi-charles': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/8/2026 11:39 AM' },
+      { type:'email', rep:'Iain Anderson', outcome:'OBI & Salesforce — renewal + Bio Sharing Network', date:'10/8/2026 11:40 AM' },
+      { type:'email', rep:'Iain Anderson', outcome:'⚠️ REPLY: "We are not looking to expand our current use of Salesforce tools. I will let you know if this changes." Sent webinar follow-up.', date:'10/8/2026 3:13 PM' },
+    ]},
+    // Blood Connection
+    'bc-brian': { log:[
+      { type:'email', rep:'Iain Anderson', outcome:'Personal DF2U Atlanta invite — mentioned 2hr drive, meals provided', date:'10/7/2026 2:18 PM' },
+    ]},
+    'bc-don': { log:[
+      { type:'email', rep:'Iain Anderson', outcome:'DF2U Atlanta invite', date:'10/7/2026 2:18 PM' },
+    ]},
+    'bc-william': { log:[
+      { type:'linkedin', rep:'Iain Anderson', outcome:'LinkedIn InMail — Donor 360 webinar + DF2U Atlanta invite', date:'10/7/2026 1:31 PM' },
+    ]},
+    // CBCO
+    'df-kenda': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/8/2026 3:28 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'CBCO & Salesforce — DF2U Chicago + Donor 360 webinar', date:'10/8/2026 3:31 PM' },
+    ]},
+    'wb-kburnham': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/8/2026 3:28 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'CBCO & Salesforce — DF2U Chicago + Donor 360 webinar', date:'10/8/2026 3:31 PM' },
+    ]},
+    // Community Blood Center Inc
+    'cbc-tricia': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/7/2026 2:40 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'DF2U Chicago + Donor 360 webinar invite', date:'10/7/2026 2:43 PM' },
+    ]},
+    'df-tricia': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/7/2026 2:40 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'DF2U Chicago + Donor 360 webinar invite', date:'10/7/2026 2:43 PM' },
+    ]},
+    // SD Blood Bank
+    'wb-jcastillo': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/7/2026 3:00 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'SD Blood Bank & Salesforce — Donor 360 webinar invite', date:'10/7/2026 3:00 PM' },
+    ]},
+    'wb-dmorton': { log:[
+      { type:'email', rep:'Iain Anderson', outcome:'Vitalant merger congratulations + integration tension + webinar invite', date:'10/7/2026 3:31 PM' },
+    ]},
+    // Kentucky
+    'ky-eric': { log:[
+      { type:'linkedin', rep:'Iain Anderson', outcome:'LinkedIn connection request sent via Sales Navigator', date:'10/7/2026 3:38 PM' },
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/7/2026 3:40 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'Rethinking donor engagement — Donor 360 webinar invite', date:'10/7/2026 3:37 PM' },
+    ]},
+    'wb-elindsey': { log:[
+      { type:'linkedin', rep:'Iain Anderson', outcome:'LinkedIn connection request sent', date:'10/7/2026 3:38 PM' },
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/7/2026 3:40 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'Rethinking donor engagement — Donor 360 webinar invite', date:'10/7/2026 3:37 PM' },
+    ]},
+    // LifeServe
+    'wb-tpaluch': { log:[
+      { type:'email', rep:'Iain Anderson', outcome:'Rethinking donor engagement — Donor 360 webinar invite', date:'10/7/2026 4:51 PM' },
+    ]},
+    // We Are Blood
+    'df-ncanedo': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/8/2026 3:57 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'We Are Blood & Salesforce — DF2U Austin + Donor 360 webinar', date:'10/8/2026 4:00 PM' },
+    ]},
+    'df-clill': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/8/2026 4:05 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'We Are Blood & Salesforce — DF2U Austin + Donor 360 webinar', date:'10/8/2026 4:06 PM' },
+    ]},
+    'wb-ncanedo2': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/8/2026 3:57 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'We Are Blood & Salesforce — DF2U Austin + Donor 360 webinar', date:'10/8/2026 4:00 PM' },
+    ]},
+    'wb-clill2': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/8/2026 4:05 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'We Are Blood & Salesforce — DF2U Austin + Donor 360 webinar', date:'10/8/2026 4:06 PM' },
+    ]},
+    // PMA
+    'pma-jose': { log:[
+      { type:'connect', rep:'Iain Anderson', outcome:'⚠️ CONNECTED: Pitched the partnership. Jose said "we do not work a Salesforce at this time."', date:'10/8/2026 10:19 AM' },
+      { type:'email', rep:'Iain Anderson', outcome:'Follow-up after call — standing invite to Salesforce Tower for coffee', date:'10/8/2026 10:16 PM' },
+    ]},
+    'pma-scott': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/8/2026 10:27 AM' },
+      { type:'email', rep:'Iain Anderson', outcome:'PMA economics — 33% revenue drop + Union Pacific/Walmart examples', date:'10/8/2026 10:29 AM' },
+    ]},
+    'pma-steven': { log:[
+      { type:'linkedin', rep:'Iain Anderson', outcome:'LinkedIn connection request sent', date:'10/7/2026 4:58 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'PMA & Salesforce — port diversion / freight ops angle', date:'10/8/2026 9:42 AM' },
+    ]},
+    'pma-chad': { log:[
+      { type:'linkedin', rep:'Iain Anderson', outcome:'LinkedIn connection request sent', date:'10/7/2026 4:57 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'PMA economics — 33% revenue drop / labor dispatch angle', date:'10/7/2026 5:29 PM' },
+    ]},
+    // Focus 16 duplicates
+    'f12-scott': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/8/2026 10:27 AM' },
+      { type:'email', rep:'Iain Anderson', outcome:'PMA economics + Salesforce capabilities', date:'10/8/2026 10:29 AM' },
+    ]},
+    'f12-steven': { log:[
+      { type:'linkedin', rep:'Iain Anderson', outcome:'LinkedIn connection request sent', date:'10/7/2026 4:58 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'PMA & Salesforce — port diversion angle', date:'10/8/2026 9:42 AM' },
+    ]},
+    'f12-jose': { log:[
+      { type:'connect', rep:'Iain Anderson', outcome:'⚠️ CONNECTED: Said "we do not work a Salesforce at this time."', date:'10/8/2026 10:19 AM' },
+    ]},
+    'f13-tricia': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/7/2026 2:40 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'DF2U Chicago + Donor 360 webinar invite', date:'10/7/2026 2:43 PM' },
+    ]},
+    'f1-andrea': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/8/2026 1:55 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'DF2U Austin + Donor 360 webinar invite', date:'10/8/2026 1:59 PM' },
+    ]},
+    'df-asign2': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/8/2026 1:55 PM' },
+      { type:'email', rep:'Iain Anderson', outcome:'DF2U Austin + Donor 360 webinar invite', date:'10/8/2026 1:59 PM' },
+    ]},
+    // OBI tara in focus16
+    'wb-tara': { log:[
+      { type:'call', rep:'Iain Anderson', outcome:'Left VM', date:'10/7/2026 10:15 AM' },
+      { type:'email', rep:'Iain Anderson', outcome:'Rethinking donor engagement — Donor 360 webinar invite', date:'10/7/2026 10:27 AM' },
+    ]},
+    _seeded_v3: true
+  };
+
+  Object.entries(seed).forEach(([k, v]) => { if (!d[k]) d[k] = v; });
+  d._seeded_v3 = true;
+  saveData(d);
+}
+
+// ─── ACTIVITY SUMMARY ────────────────────────────────────────────────────────
+function getActivityChips(contactId) {
+  const cd = getContactData(contactId);
+  if (!cd.log || !cd.log.length) return '<span style="color:#DDDBDA;font-size:11px">—</span>';
+
+  // Count by type and rep
+  const counts = {};
+  let hasWarn = false;
+  cd.log.forEach(t => {
+    const key = t.type + '|' + t.rep;
+    counts[key] = (counts[key] || 0) + 1;
+    if (t.outcome && t.outcome.includes('⚠️')) hasWarn = true;
+  });
+
+  const typeLabel = { call:'📞', connect:'📞✅', email:'📧', linkedin:'🔗', meeting:'📅' };
+  const typeClass = { call:'ach-call', connect:'ach-connect', email:'ach-email', linkedin:'ach-linkedin', meeting:'ach-call' };
+
+  // Group by type
+  const byType = {};
+  Object.entries(counts).forEach(([k, n]) => {
+    const [type, rep] = k.split('|');
+    if (!byType[type]) byType[type] = [];
+    // Short rep name
+    const shortRep = rep === 'Iain Anderson' ? 'IA' : rep.split(' ')[0];
+    byType[type].push(`${shortRep}×${n}`);
+  });
+
+  let html = Object.entries(byType).map(([type, reps]) =>
+    `<span class="ach ${typeClass[type]||'ach-call'}">${typeLabel[type]||'?'} ${reps.join(', ')}</span>`
+  ).join('');
+
+  if (hasWarn) html += ' <span class="ach ach-warn">⚠️ See log</span>';
+  return html || '<span style="color:#DDDBDA;font-size:11px">—</span>';
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function renderCampaign(campId) {
+  const camp = CAMPAIGNS[campId];
+  const tierTag = camp.tier === 't1' ? 'tag-red' : camp.tier === 't2' ? 'tag-yellow' : 'tag-gray';
+  const tierLabel = camp.tier === 't1' ? '🚨 Tier 1 — Close Now' : camp.tier === 't2' ? '⚡ Tier 2 — Build' : '📅 Tier 3';
+
+  let html = `<div class="camp-meta">
+    <div class="cm-name">${camp.name}</div>
+    <div class="cm-theme">${camp.theme}</div>
+    <div class="cm-tags">
+      <span class="tag ${tierTag}">${tierLabel}</span>
+      <span class="tag tag-blue">⏰ ${camp.window}</span>
+      <span class="tag tag-blue">${camp.revenue}</span>
+      ${camp.products.map(p => `<span class="tag tag-gray">${p}</span>`).join('')}
+    </div>
+  </div>`;
+
+  camp.accounts.forEach(acct => {
+    const tierClass = acct.tier === 't1' ? 't1' : acct.tier === 't2' ? 't2' : 't3';
+    const sfLink = acct.sfId
+      ? `<a href="https://org62.lightning.force.com/lightning/r/Account/${acct.sfId}/view" target="_blank" style="color:#032D60;text-decoration:none">${acct.name}</a>`
+      : acct.name;
+
+    html += `<div class="acct-block">
+      <div class="acct-head ${tierClass}">
+        <div style="flex:1">
+          <div class="acct-title">${sfLink}</div>
+          <div class="acct-sub">${acct.rev}${acct.closeBy ? ' · ⏰ ' + acct.closeBy : ''}</div>
+        </div>
+        <span class="tag ${tierClass === 't1' ? 'tag-red' : tierClass === 't2' ? 'tag-yellow' : 'tag-gray'}">${acct.tier.toUpperCase()}</span>
+      </div>
+      <div class="acct-action">${acct.nextAction}</div>
+      <table class="contact-table">
+        <thead>
+          <tr>
+            <th style="width:180px">Contact</th>
+            <th>Title</th>
+            <th>Email / Phone</th>
+            <th>Calls</th>
+            <th>Emails</th>
+            <th>Other</th>
+            <th style="width:70px"></th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+    acct.contacts.forEach(c => {
+      const cd = getContactData(c.id);
+      const log = cd.log || [];
+
+      // Count by type
+      const callCount = log.filter(t => t.type === 'call').length;
+      const connectCount = log.filter(t => t.type === 'connect').length;
+      const emailCount = log.filter(t => t.type === 'email').length;
+      const otherCount = log.filter(t => t.type === 'linkedin' || t.type === 'meeting').length;
+
+      // Build per-rep summaries
+      const callsByRep = repSummary(log, ['call','connect']);
+      const emailsByRep = repSummary(log, ['email']);
+      const otherByRep = repSummary(log, ['linkedin','meeting']);
+
+      const hasWarn = c.warn || log.some(t => t.outcome && t.outcome.includes('⚠️'));
+
+      html += `<tr>
+        <td>
+          <div class="cn">${c.name}</div>
+          ${hasWarn ? `<div style="font-size:10px;color:#C23934;margin-top:2px;font-weight:700">⚠️ ${c.warn || 'See activity log'}</div>` : ''}
+        </td>
+        <td class="ct">${c.title || ''}</td>
+        <td class="ce">${c.email ? `<a href="mailto:${c.email}" style="color:#0176D3">${c.email}</a>` : ''}${c.phone ? `<br><span style="color:#514F4D">${c.phone}</span>` : ''}</td>
+        <td><div class="act-chips">${callsByRep || (callCount + connectCount > 0 ? '<span class="ach ach-call">📞 ' + (callCount+connectCount) + '</span>' : '<span style="color:#DDDBDA">—</span>')}</div></td>
+        <td><div class="act-chips">${emailsByRep || (emailCount > 0 ? '<span class="ach ach-email">📧 ' + emailCount + '</span>' : '<span style="color:#DDDBDA">—</span>')}</div></td>
+        <td><div class="act-chips">${otherByRep || (otherCount > 0 ? '<span class="ach ach-linkedin">× ' + otherCount + '</span>' : '<span style="color:#DDDBDA">—</span>')}</div></td>
+        <td><button class="log-btn" onclick="openModal('${c.id}','${c.name}','${acct.name}')">+ Log</button></td>
+      </tr>`;
+    });
+
+    // Activity log (collapsible, shown if there's history)
+    const allLog = acct.contacts.flatMap(c => (getContactData(c.id).log || []).map(t => ({ ...t, cname: c.name }))).sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 10);
+    if (allLog.length) {
+      html += `<tr><td colspan="7" style="padding:0">
+        <div style="border-top:1px solid #DDDBDA;padding:10px 14px;background:#FAFAFA">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:#0176D3;margin-bottom:6px">Activity Log</div>
+          ${allLog.map(t => {
+            const icons = {call:'📞',connect:'📞✅',email:'📧',linkedin:'🔗',meeting:'📅'};
+            const warn = t.outcome && t.outcome.includes('⚠️');
+            return `<div style="display:flex;gap:8px;padding:4px 0;border-bottom:1px solid #DDDBDA;font-size:11px;${warn?'background:#FFF5F5;':''}">
+              <span style="color:#514F4D;white-space:nowrap;min-width:130px">${t.date}</span>
+              <span style="font-weight:700;min-width:90px">${icons[t.type]||'?'} ${t.type}</span>
+              <span style="color:#032D60;min-width:80px">${t.rep === 'Iain Anderson' ? 'Iain' : t.rep}</span>
+              <span style="color:#514F4D">→ ${t.cname}</span>
+              ${t.outcome ? `<span style="color:${warn?'#C23934':'#514F4D'};flex:1">${t.outcome}</span>` : ''}
+            </div>`;
+          }).join('')}
+        </div>
+      </td></tr>`;
+    }
+
+    // Notes row
+    const note = getNote(acct.id);
+    html += `<tr class="notes-row"><td colspan="7">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:#514F4D;margin-bottom:4px">Team Notes</div>
+      <textarea class="notes-area" placeholder="Shared team notes for this account…" onchange="saveNote('${acct.id}',this.value)">${note}</textarea>
+    </td></tr>`;
+
+    html += `</tbody></table></div>`;
+  });
+
+  return html;
+}
+
+function repSummary(log, types) {
+  const counts = {};
+  log.filter(t => types.includes(t.type)).forEach(t => {
+    const rep = t.rep === 'Iain Anderson' ? 'IA' : t.rep.split(' ')[0];
+    counts[rep] = (counts[rep] || 0) + 1;
+  });
+  if (!Object.keys(counts).length) return '';
+  const typeClass = types.includes('call') ? 'ach-call' : types.includes('email') ? 'ach-email' : 'ach-linkedin';
+  const icon = types.includes('connect') ? '📞' : types.includes('email') ? '📧' : '🔗';
+  return Object.entries(counts).map(([rep, n]) => `<span class="ach ${typeClass}">${icon} ${rep}×${n}</span>`).join('');
+}
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+let _modalContactId;
+
+function openModal(contactId, contactName, acctName) {
+  _modalContactId = contactId;
+  document.getElementById('modal-for').textContent = contactName + ' · ' + acctName;
+  document.getElementById('m-key').value = contactId;
+  document.getElementById('m-rep').value = currentUser;
+  document.getElementById('m-outcome').value = '';
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+function saveTouch() {
+  const cid = document.getElementById('m-key').value;
+  const type = document.getElementById('m-type').value;
+  const rep = document.getElementById('m-rep').value || currentUser;
+  const outcome = document.getElementById('m-outcome').value;
+  const cd = getContactData(cid);
+  cd.log.push({ type, rep, outcome, date: new Date().toLocaleString() });
+  saveContactData(cid, cd);
+  closeModal();
+  if (currentCamp === 'all-touched') {
+    document.getElementById('content').innerHTML = renderAllActivity();
+  } else {
+    document.getElementById('content').innerHTML = renderCampaign(currentCamp);
+  }
+  updateStats();
+}
+
+// ─── NAV ──────────────────────────────────────────────────────────────────────
+let currentCamp = 'blood-newlogo';
+
+function showCamp(campId, tabEl) {
+  currentCamp = campId;
+  document.querySelectorAll('.ctab').forEach(t => t.classList.remove('active'));
+  tabEl.classList.add('active');
+  if (campId === 'all-touched') {
+    document.getElementById('content').innerHTML = renderAllActivity();
+  } else {
+    document.getElementById('content').innerHTML = renderCampaign(campId);
+  }
+}
+
+function renderAllActivity() {
+  // Collect every contact across all campaigns, deduplicate by id, group by account
+  const seenContacts = new Set();
+  const accountMap = {}; // acctName -> { acct, contacts: [] }
+
+  Object.values(CAMPAIGNS).forEach(camp => {
+    (camp.accounts || []).forEach(acct => {
+      (acct.contacts || []).forEach(c => {
+        if (seenContacts.has(c.id)) return;
+        const log = getContactData(c.id).log || [];
+        if (!log.length) return; // only show contacts that have been touched
+        seenContacts.add(c.id);
+        const key = acct.name;
+        if (!accountMap[key]) accountMap[key] = { acct, camp, contacts: [] };
+        accountMap[key].contacts.push(c);
+      });
+    });
+  });
+
+  // Sort accounts: most recent touch first
+  const sorted = Object.values(accountMap).sort((a, b) => {
+    const lastA = a.contacts.flatMap(c => getContactData(c.id).log || []).sort((x,y) => new Date(y.date) - new Date(x.date))[0];
+    const lastB = b.contacts.flatMap(c => getContactData(c.id).log || []).sort((x,y) => new Date(y.date) - new Date(x.date))[0];
+    return new Date((lastB?.date) || 0) - new Date((lastA?.date) || 0);
+  });
+
+  // Global notes
+  const globalNote = getData()['note_global'] || '';
+  const notesBlock = `<div style="background:white;border-radius:8px;border:1px solid #DDDBDA;padding:14px 18px;margin-bottom:16px">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:#514F4D;margin-bottom:6px">📝 Team Notes — Week of ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
+    <textarea class="notes-area" style="width:100%;min-height:70px" placeholder="Weekly priorities, blockers, strategy notes, what the team is focused on this week…" onchange="saveNote('global',this.value)">${globalNote}</textarea>
+  </div>`;
+
+  if (!sorted.length) {
+    return notesBlock + `<div style="background:white;border-radius:8px;border:1px solid #DDDBDA;padding:40px;text-align:center;color:#514F4D">
+      No touches logged yet. Use the + Log button on any contact to record activity.
+    </div>`;
+  }
+
+  // Summary bar
+  const allLog = sorted.flatMap(g => g.contacts.flatMap(c => getContactData(c.id).log || []));
+  const totalTouches = allLog.length;
+  const totalContacts = seenContacts.size;
+  const totalAccounts = sorted.length;
+  const byType = {};
+  const byRep = {};
+  allLog.forEach(t => {
+    byType[t.type] = (byType[t.type] || 0) + 1;
+    const rep = t.rep === 'Iain Anderson' ? 'Iain Anderson' : t.rep;
+    byRep[rep] = (byRep[rep] || 0) + 1;
+  });
+
+  const typeIcons = { call:'📞', connect:'📞✅', email:'📧', linkedin:'🔗', meeting:'📅' };
+
+  let html = notesBlock + `<div style="background:white;border-radius:8px;border:1px solid #DDDBDA;padding:14px 18px;margin-bottom:16px;display:flex;gap:24px;flex-wrap:wrap;align-items:center">
+    <div style="text-align:center"><div style="font-size:22px;font-weight:800;color:#032D60">${totalTouches}</div><div style="font-size:10px;color:#514F4D;text-transform:uppercase">Total Touches</div></div>
+    <div style="width:1px;background:#DDDBDA;align-self:stretch"></div>
+    <div style="text-align:center"><div style="font-size:22px;font-weight:800;color:#0176D3">${totalContacts}</div><div style="font-size:10px;color:#514F4D;text-transform:uppercase">Contacts Reached</div></div>
+    <div style="width:1px;background:#DDDBDA;align-self:stretch"></div>
+    <div style="text-align:center"><div style="font-size:22px;font-weight:800;color:#2E844A">${totalAccounts}</div><div style="font-size:10px;color:#514F4D;text-transform:uppercase">Accounts Touched</div></div>
+    <div style="width:1px;background:#DDDBDA;align-self:stretch"></div>
+    <div>
+      <div style="font-size:10px;color:#514F4D;text-transform:uppercase;margin-bottom:4px">By Type</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        ${Object.entries(byType).map(([t,n]) => `<span class="ach ${t==='email'?'ach-email':t==='connect'?'ach-connect':t==='linkedin'?'ach-linkedin':'ach-call'}">${typeIcons[t]||'?'} ${n}</span>`).join('')}
+      </div>
+    </div>
+    <div style="width:1px;background:#DDDBDA;align-self:stretch"></div>
+    <div>
+      <div style="font-size:10px;color:#514F4D;text-transform:uppercase;margin-bottom:4px">By Rep</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        ${Object.entries(byRep).sort((a,b)=>b[1]-a[1]).map(([rep,n]) => `<span class="ach ach-call" style="background:#E8F4FD;color:#032D60">${rep} × ${n}</span>`).join('')}
+      </div>
+    </div>
+  </div>`;
+
+  // One block per account
+  sorted.forEach(({ acct, camp, contacts }) => {
+    const tierClass = acct.tier === 't1' ? 't1' : acct.tier === 't2' ? 't2' : 't3';
+    const tierTagClass = acct.tier === 't1' ? 'tag-red' : acct.tier === 't2' ? 'tag-yellow' : 'tag-gray';
+    const sfLink = acct.sfId
+      ? `<a href="https://org62.lightning.force.com/lightning/r/Account/${acct.sfId}/view" target="_blank" style="color:#032D60;text-decoration:none">${acct.name}</a>`
+      : acct.name;
+
+    // Most recent touch date for this account
+    const acctLog = contacts.flatMap(c => getContactData(c.id).log || []).sort((a,b) => new Date(b.date) - new Date(a.date));
+    const lastTouchDate = acctLog[0]?.date || '';
+
+    html += `<div class="acct-block">
+      <div class="acct-head ${tierClass}" style="gap:10px">
+        <div style="flex:1">
+          <div class="acct-title">${sfLink}</div>
+          <div class="acct-sub">${acct.rev || ''} · <span style="color:#514F4D;font-size:11px">Campaign: ${camp.name}</span></div>
+        </div>
+        <span class="tag ${tierTagClass}">${acct.tier.toUpperCase()}</span>
+        ${lastTouchDate ? `<span style="font-size:11px;color:#514F4D;white-space:nowrap">Last touch: <strong>${lastTouchDate}</strong></span>` : ''}
+      </div>
+      <table class="contact-table">
+        <thead>
+          <tr>
+            <th style="width:160px">Contact</th>
+            <th>Title</th>
+            <th>Calls</th>
+            <th>Emails</th>
+            <th>Other</th>
+            <th>Last Activity</th>
+            <th style="width:70px"></th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+    contacts.forEach(c => {
+      const log = (getContactData(c.id).log || []).sort((a,b) => new Date(b.date) - new Date(a.date));
+      const callsByRep = repSummary(log, ['call','connect']);
+      const emailsByRep = repSummary(log, ['email']);
+      const otherByRep = repSummary(log, ['linkedin','meeting']);
+      const lastEntry = log[0];
+      const hasWarn = c.warn || log.some(t => t.outcome && t.outcome.includes('⚠️'));
+
+      html += `<tr>
+        <td>
+          <div class="cn">${c.name}</div>
+          ${hasWarn ? `<div style="font-size:10px;color:#C23934;font-weight:700;margin-top:1px">⚠️ ${c.warn || 'See log'}</div>` : ''}
+        </td>
+        <td class="ct">${c.title || ''}</td>
+        <td><div class="act-chips">${callsByRep || '<span style="color:#DDDBDA">—</span>'}</div></td>
+        <td><div class="act-chips">${emailsByRep || '<span style="color:#DDDBDA">—</span>'}</div></td>
+        <td><div class="act-chips">${otherByRep || '<span style="color:#DDDBDA">—</span>'}</div></td>
+        <td style="font-size:11px;color:#514F4D;white-space:nowrap">
+          ${lastEntry ? `<span style="font-weight:700">${typeIcons[lastEntry.type]||''} ${lastEntry.type}</span><br>${lastEntry.date}` : '—'}
+        </td>
+        <td><button class="log-btn" onclick="openModal('${c.id}','${c.name}','${acct.name}')">+ Log</button></td>
+      </tr>`;
+
+      // Show last 3 log entries inline
+      if (log.length > 0) {
+        html += `<tr><td colspan="7" style="padding:0 14px 8px;background:#FAFAFA;font-size:11px">
+          ${log.slice(0,3).map(t => {
+            const warn = t.outcome && t.outcome.includes('⚠️');
+            return `<div style="padding:3px 0;border-bottom:1px solid #DDDBDA;display:flex;gap:8px;${warn?'color:#C23934':'color:#514F4D'}">
+              <span style="white-space:nowrap;min-width:120px">${t.date}</span>
+              <span style="font-weight:700;min-width:80px">${typeIcons[t.type]||'?'} ${t.type}</span>
+              <span style="min-width:60px">${t.rep === 'Iain Anderson' ? 'Iain' : t.rep}</span>
+              ${t.outcome ? `<span>${t.outcome}</span>` : ''}
+            </div>`;
+          }).join('')}
+        </td></tr>`;
+      }
+    });
+
+    html += `</tbody></table></div>`;
+  });
+
+  return html;
+}
+
+function refreshCurrentCamp() {
+  document.getElementById('content').innerHTML = renderCampaign(currentCamp);
+}
+
+// ─── STATS ────────────────────────────────────────────────────────────────────
+function updateStats() {
+  const d = getData();
+  const today = new Date().toLocaleDateString();
+  let ae = 0, bdr = 0, total = 0;
+  Object.entries(d).forEach(([k, v]) => {
+    if (k.startsWith('_') || k.startsWith('note_')) return;
+    (v.log || []).forEach(t => {
+      total++;
+      const date = new Date(t.date).toLocaleDateString();
+      if (date === today) {
+        if (t.rep === 'Iain Anderson' || t.rep === 'IA') ae++;
+        else if (t.rep === 'BDR') bdr++;
+      }
+    });
+  });
+  document.getElementById('hs-ae').textContent = ae;
+  document.getElementById('hs-bdr').textContent = bdr;
+  document.getElementById('hs-total').textContent = total;
+  document.getElementById('today-lbl').textContent = ae + ' AE touches today · ' + bdr + ' BDR touches today';
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
+
+window.addEventListener('DOMContentLoaded', () => {
+  // Restore user
+  const su = localStorage.getItem('ch_user3');
+  if (su) {
+    currentUser = su;
+    currentRole = localStorage.getItem('ch_role3') || 'ae';
+    const sel = document.getElementById('user-sel');
+    for (let i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value.startsWith(su + '|')) { sel.selectedIndex = i; break; }
+    }
+  }
+  seedTouches();
+  currentCamp = 'all-touched';
+  document.getElementById('content').innerHTML = renderAllActivity();
+  updateStats();
+});
+</script>
+</body>
+</html>
